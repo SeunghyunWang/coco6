@@ -5,7 +5,7 @@
 
 1. char info[]의 배열 안에					"TeamName:자신의 팀명,Department:자신의 소속"					순서로 작성합니다.
 ( 주의 ) Teamname:과 Department:는 꼭 들어가야 합니다.
-"자신의 팀명", "자신의 소속"을 수정해야 합니다.
+"자신의 팀명", "자신의 sds소속"을 수정해야 합니다.
 
 2. 아래의 myturn() 함수 안에 자신만의 AI 코드를 작성합니다.
 
@@ -46,7 +46,7 @@ char info[] = { "TeamName:눔뇽, Department:숭실대학교" };
 //char info[] = { "TeamName: test1, Department:test2" };
 
 void myturn(int cnt) {
-	
+
 	int x[2], y[2];
 
 	// 이 부분에서 알고리즘 프로그램(AI)을 작성하십시오. 기본 제공된 코드를 수정 또는 삭제하고 본인이 코드를 사용하시면 됩니다.
@@ -54,15 +54,15 @@ void myturn(int cnt) {
 
 	srand((unsigned)time(NULL));  //시간별로 난수 발생
 
-	for (int i = 0; i < cnt; i++) 
+
+	for (int i = 0; i < cnt; i++)
 	{
-		do 
+		do
 		{
 			x[i] = rand() % width;
 			y[i] = rand() % height;
-		
-			if (terminateAI == 1 && s_time>limitTime) return;	//true이면 turn 종료
 
+			if (terminateAI == 1) return;	//true이면 turn 종료
 
 
 		} while (!isFree(x[i], y[i])); // 돌이 다 놓여질 때까지 실행
@@ -78,7 +78,24 @@ void myturn(int cnt) {
 	// 이 부분에서 자신이 놓을 돌을 출력하십시오.
 	// 필수 함수 : domymove(x배열,y배열,배열크기)
 	// 여기서 배열크기(cnt)는 myturn()의 파라미터 cnt를 그대로 넣어야합니다.
-	domymove(x, y, cnt); //첫번째+(두번째) 돌의 위치를 담은 배열 인자 전달
+
+	while (1)
+	{
+		l_time = GetTickCount();
+
+		if (l_time - s_time >= (unsigned int)((limitTime * 1000) - 200))
+		{
+			char buf[200] = { " " };
+			sprintf_s(buf, "l_time: %u  s_time: %u  limitTime: %d 종료까지 남은시간: %u \n", l_time, s_time, limitTime, l_time - s_time);
+			writeLog(buf);
+
+			domymove(x, y, cnt);
+			break;
+		}
+
+		//domymove(x, y, cnt);
+		//break;
+	}
 }
 
 
