@@ -10,6 +10,8 @@
 #include "Connect6Algo.h"
 
 unsigned s_time;					//시간변수
+unsigned l_time;					//마지막 시간변수
+
 int terminateAI;					//turn 종료를 위한 변수
 int width = 19, height = 19;
 int cnt = 2;						//놓을 수 있는 돌의 수, 기본값 2
@@ -57,19 +59,31 @@ static const char *getParam(const char *command, const char *input) {
 }
 
 static void stop() {			//프로세스 종료
-	terminateAI = 1;
-	WaitForSingleObject(event2, INFINITE);
+
+		terminateAI = 1;						//적차례
+		WaitForSingleObject(event2, INFINITE);	//적 이벤트 기다림
 }
 
-static void start() {			//시작시
+static void start() {			//시작
 
-	s_time = GetTickCount();
-	if (s_time>limitTime)
+	s_time = GetTickCount();			//시작 시간 s_time에 저장
 	stop();	
 	
 }
 
 static void turn() {			//턴시작 함수
+
+	//char buf[200] = { " " };
+	//sprintf_s(buf, "l_time: %u  s_time: %u  limitTime: %d 종료까지 남은시간: %u \n", l_time, s_time, limitTime, l_time - s_time );
+	//writeLog(buf);
+
+	//if (l_time - s_time >= (limitTime * 1000) - 3000)
+	//{ 
+	//	
+	//	terminateAI = 0;
+	//	ResetEvent(event2);
+	//	SetEvent(event1);
+	//}
 	terminateAI = 0;
 	ResetEvent(event2);
 	SetEvent(event1);
@@ -93,7 +107,7 @@ void domymove(int x[], int y[], int cnt) {
 	
 }
 
-int showBoard(int x, int y) {
+int showBoard(int x, int y) {	//보드의 값 0? 1? 2?
 	return board[x][y];
 }
 
@@ -106,7 +120,7 @@ static void doCommand() {
 	sprintf_s(buf, "-- input: %s \n",cmd);
 	writeLog(buf);
 
-	if ((param = getParam("START", cmd)) != 0) {	//START 버튼 누르면 start()함수 시작
+	if ((param = getParam("START", cmd)) != 0) {	//START 버튼 누르면  바둑판 초기화
 		start();
 		init();
 		setLine("OK");
@@ -116,7 +130,7 @@ static void doCommand() {
 		writeLog(buf);
 
 	}
-	else if ((param = getParam("BEGIN", cmd)) != 0) {	//맨처음 시작할 때
+	else if ((param = getParam("BEGIN", cmd)) != 0) {	//맨처음 시작할 때(게임의 첫수)
 		myColor = 1;									//내 색은 1(흑색)
 		cnt = 1;										//cnt값은 1
 		start();
@@ -135,7 +149,7 @@ static void doCommand() {
 
 			return;
 		}
-		else 
+		else			
 		{
 			for (int i = 0; i < (r / 2); i++) 
 			{
@@ -182,12 +196,17 @@ static void doCommand() {
 
 }
 
-static DWORD WINAPI threadLoop(LPVOID) {	//2번째 돌을 놓는 이벤트로 변경
-	while (1) {
-		WaitForSingleObject(event1, INFINITE);
+static DWORD WINAPI threadLoop(LPVOID) 
+{	
+	while (1) 
+	{
+		WaitForSingleObject(event1, INFINITE);	//내가 돌을 놓을 차례까지 기다림
+		s_time = GetTickCount();			//내 프로세스가 시작된 시간
+
 		myturn(cnt);						//해액심!!AI_Algorithm_Code.cpp의 우리 함수 여기만 존재
-		if (cnt == 1) cnt = 2;	
-		SetEvent(event2);
+		if (cnt == 1) cnt = 2;				//내가 흑이고 처음 두는 것 이었으면 처음두고, cnt = 2 대입
+		
+		SetEvent(event2);					//적차례로 이벤트 세팅
 	}
 }
 
@@ -212,11 +231,12 @@ int main() {		//메인 함수
 		puts("직접 실행 불가능한 파일입니다. 육목 알고리즘 대회 툴을 이용해 실행하세요.");
 
 	DWORD tid;
-	event1 = CreateEvent(0, FALSE, FALSE, 0);		//첫번째 돌놓는 이벤트
+	event1 = CreateEvent(0, FALSE, FALSE, 0);		//내가 돌놓는 이벤트
 	CreateThread(0, 0, threadLoop, 0, 0, &tid);
-	event2 = CreateEvent(0, TRUE, TRUE, 0);			//두번째 돌놓는 이벤트
+	event2 = CreateEvent(0, TRUE, TRUE, 0);			//적이 돌놓는 이벤트
 
-	while (1) {
+	while (1) 
+	{
 		getLine();
 		doCommand();
 	}

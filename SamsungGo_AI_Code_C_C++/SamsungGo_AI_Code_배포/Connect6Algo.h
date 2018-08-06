@@ -7,6 +7,7 @@ extern int width, height;
 extern int terminateAI;
 extern int limitTime;
 extern unsigned s_time;	//제한시간
+extern unsigned l_time;
 
 extern FILE *fp;
 
