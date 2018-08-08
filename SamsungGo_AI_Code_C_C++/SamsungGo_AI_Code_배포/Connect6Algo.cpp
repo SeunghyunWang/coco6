@@ -193,6 +193,17 @@ static DWORD WINAPI threadLoop(LPVOID)
 		WaitForSingleObject(event1, INFINITE);	//내가 돌을 놓을 차례까지 기다림
 		s_time = GetTickCount();			//내 프로세스가 시작된 시간
 
+		//턴 계산
+		for (int i = 0; i < 19; i++)
+		{
+			stage += count(board[i], board[i] + 19, 1 || 2);
+		}
+		stage = stage / 2 + 1;
+
+		char buf[200] = { " " };
+		sprintf_s(buf, "TURN!!!!!!!!!!!!!: %d \n", stage);
+		writeLog(buf);
+
 		if (cnt == 2)
 			myturn(cnt);		//AI_Algorithm_Code.cpp의 우리 함수 여기만 존재
 		else //cnt == 1 흑으로 시작이면 무조건 9,9에 둔다.
@@ -259,8 +270,11 @@ void init() {								//Board 0으로 초기화
 
 void mymove(int x[], int y[], int cnt) {	//내가 돌을 놨을 때 = 1 board 정보갱신
 	for (int i = 0; i < cnt; i++) {
-		if (isFree(x[i], y[i])) {
+		if (isFree(x[i], y[i])) 
+		{
 			board[x[i]][y[i]] = 1;
+			if (i == 0)	Lastmymove1 = make_pair(x[0], y[0]);	//아군 가장 최근 수
+			if (i == 1)	Lastmymove2 = make_pair(x[1], y[1]);
 		}
 		else {
 			setLine("ERROR 이미 돌이 있는 위치입니다. MY[%d, %d]", x[i], y[i]);
@@ -270,8 +284,11 @@ void mymove(int x[], int y[], int cnt) {	//내가 돌을 놨을 때 = 1 board 정보갱신
 
 void opmove(int x[], int y[], int cnt) {	//적이 돌을 놨을 때 = 2
 	for (int i = 0; i < cnt; i++) {
-		if (isFree(x[i], y[i])) {
+		if (isFree(x[i], y[i])) 
+		{
 			board[x[i]][y[i]] = 2;
+			if (i==0)	Lastopmove1 = make_pair(x[0], y[0]);	//적의 가장 최근 수
+			if (i==1)	Lastopmove2 = make_pair(x[1], y[1]);
 		}
 		else {
 			setLine("ERROR 이미 돌이 있는 위치입니다. OP[%d, %d]", x[i], y[i]);

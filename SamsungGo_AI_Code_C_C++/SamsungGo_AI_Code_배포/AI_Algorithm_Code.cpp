@@ -112,7 +112,7 @@ void myturn(int cnt) {
 	{
 		l_time = GetTickCount();
 
-		if (l_time - s_time >= (unsigned int)((limitTime * 1000) - 500)) //1000이 시간기본단위,250 (0.25초) 
+		if (l_time - s_time >= (unsigned int)((limitTime * 1000) - 2500)) //1000이 시간기본단위,250 (0.25초) 
 		{
 			char buf[200] = { " " };
 			sprintf_s(buf, "l_time: %u  s_time: %u  limitTime: %d 종료까지 남은시간: %u \n", l_time, s_time, limitTime, l_time - s_time);

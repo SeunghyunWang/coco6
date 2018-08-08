@@ -1,10 +1,22 @@
-﻿빌드 시작: 2018-08-08 오후 5:48:18
+﻿빌드 시작: 2018-08-08 오후 7:00:57
      1>2 노드의 "C:\Users\WSH\Documents\coco6\SamsungGo_AI_Code_C_C++\SamsungGo_AI_Code_배포\SamsungGo_AI_Code_배포.vcxproj" 프로젝트(Build 대상)입니다.
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\\" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /EHa /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll" /analyze- /errorReport:prompt /clr:nostdlib AI_Algorithm_Code.cpp Connect6Algo.cpp
-         AI_Algorithm_Code.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\\" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /EHa /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll" /analyze- /errorReport:prompt /clr:nostdlib Connect6Algo.cpp
          Connect6Algo.cpp
-         코드를 생성하고 있습니다...
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xutility(3078): warning C4805: '==' : 연산에 'int' 형식과 'const bool' 형식을 함께 사용하는 것은 안전하지 않습니다.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xutility(3089) : 컴파일 중인 함수 템플릿 인스턴스화 'std::iterator_traits<int *>::difference_type std::_Count_np<_Iter,_Ty>(_InIt,_InIt,const _Ty &)'에 대한 참조를 확인하십시오.
+                 with
+                 [
+                     _Iter=int *
+         ,            _Ty=bool
+         ,            _InIt=int *
+                 ]
+                 Connect6Algo.cpp(199) : 컴파일 중인 함수 템플릿 인스턴스화 'std::iterator_traits<int *>::difference_type std::count<int*,bool>(_InIt,_InIt,const _Ty &)'에 대한 참조를 확인하십시오.
+                 with
+                 [
+                     _InIt=int *
+         ,            _Ty=bool
+                 ]
      1>c:\users\wsh\documents\coco6\samsunggo_ai_code_c_c++\samsunggo_ai_code_배포\connect6algo.cpp(41): warning C4793: 'setLine' : 함수가 네이티브로 컴파일되었습니다.
          	/clr에서는 vararg가 지원되지 않습니다.
      1>c:\users\wsh\documents\coco6\samsunggo_ai_code_c_c++\samsunggo_ai_code_배포\connect6algo.cpp(44): warning C4793: 'setLine' : 함수가 네이티브로 컴파일되었습니다.
@@ -20,4 +32,4 @@
 
 빌드했습니다.
 
-경과 시간: 00:00:03.24
+경과 시간: 00:00:02.07
