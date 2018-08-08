@@ -32,6 +32,7 @@ int showBoard(int x, int y) : [x, y] 좌표에 무슨 돌이 존재하는지 보여주는 함수 (
 
 <-------AI를 작성하실 때, 같은 이름의 함수 및 변수 사용을 권장하지 않습니다----->
 */
+#pragma once
 #include <iostream>
 #include <stdio.h>
 #include <Windows.h>
@@ -43,7 +44,20 @@ using namespace std;
 // "AI부서[C]"  -> 자신의 소속 (수정)
 // 제출시 실행파일은 반드시 팀명으로 제출!
 char info[] = { "TeamName:눔뇽, Department:숭실대학교" };
-//char info[] = { "TeamName: test1, Department:test2" };
+
+/*
+	커스텀 변수들
+*/
+
+int stage;							//지금이 몇번째 턴인지 판단 (board배열에 있는 돌의 개수(값이 1,2 인 것) search 하여 판단)
+pair <int, int> Lastmymove1;			//최근 아군 첫번째 수
+pair <int, int> Lastmymove2;			//최근 아군 두번째 수
+pair <int, int> Lastopmove1;			//최근 적군 첫번째 수
+pair <int, int> Lastopmove2;			//최근 적군 두번째 수
+vector < pair<int, int> > player;		//턴마다 움직인 돌의 정보 아군이 흑으로 시작했으면 인덱스:0과 짝수 / 백이면 홀수
+
+
+
 
 void myturn(int cnt) {
 
@@ -57,19 +71,34 @@ void myturn(int cnt) {
 
 	for (int i = 0; i < cnt; i++)
 	{
-		do
+		while (!isFree(x[i], y[i])) // 돌이 다 놓여질 때까지 실행
 		{
 			x[i] = rand() % width;
 			y[i] = rand() % height;
-
 			if (terminateAI == 1) return;	//true이면 turn 종료
 
 
-		} while (!isFree(x[i], y[i])); // 돌이 다 놓여질 때까지 실행
 
-		if (x[1] == x[0] && y[1] == y[0])
+		}
+
+
+
+		if (x[1] == x[0] && y[1] == y[0]) //첫수와 두수가 같으면 에러임 다시 시도
 			i--;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -83,7 +112,7 @@ void myturn(int cnt) {
 	{
 		l_time = GetTickCount();
 
-		if (l_time - s_time >= (unsigned int)((limitTime * 1000) - 150)) //1000이 시간기본단위,150 (0.15초) 
+		if (l_time - s_time >= (unsigned int)((limitTime * 1000) - 500)) //1000이 시간기본단위,250 (0.25초) 
 		{
 			char buf[200] = { " " };
 			sprintf_s(buf, "l_time: %u  s_time: %u  limitTime: %d 종료까지 남은시간: %u \n", l_time, s_time, limitTime, l_time - s_time);
