@@ -44,15 +44,162 @@ extern pair <int, int> Lastopmove1;			//최근 적군 첫번째 수
 extern pair <int, int> Lastopmove2;			//최근 적군 두번째 수
 extern vector < pair<int, int> > player;		//턴마다 움직인 돌의 정보 아군이 흑으로 시작했으면 인덱스:0과 짝수 / 백이면 홀수
 
-typedef struct MCT
-{
-	int ES;					//가중치( Evaluation Score  )
-	int depth;				//트리의 깊이 (or 노드 방문 횟수)
-	vector <MCT *> child;	//다음 자식노드를 저장할 벡터
-
-}MCT;
-
 /*
 	커스텀 함수
 */
+//void isTerminal();
+//void CreateMCT();
+//
+//void MCTSelect();
+//void MCTExpand();
+//void MCTSimul();
+//void MCTBackPro();
+class MCNode
+{
+	private:
+		double ES;					//가중치( Evaluation Score  )
+		int depth;				//트리의 깊이 (or 노드 방문 횟수)
+		int cntchild;			//자식노드의 수
+		int treeboard[19][19];	//시뮬레이션할 보드
+		MCNode* parent;			//부모노드 포인터
+		vector <MCNode*> child;	//다음 자식노드'들'을 저장할 벡터
 
+	public:		
+		MCNode()				//생성자
+		{
+
+		}
+		MCNode(int depth)		
+		{
+			ES = 0.0;
+			this->depth = depth;
+			cntchild = 0;
+			memset(treeboard, 0, sizeof(treeboard));
+			parent = NULL;			
+		}
+		~MCNode()			//소멸자
+		{
+			DeleteMCNode(child);
+		}
+
+		void UpdateES(double ES)
+		{
+			this->ES = ES;
+		}
+		void AddChild(MCNode* &child)
+		{
+			this->child.push_back(child);
+			++cntchild;
+		}
+		vector <MCNode*> &GetChilds()
+		{
+			return child;
+		}
+		MCNode* GetChild(int i)
+		{
+				if (child[i] != NULL)
+					return child[i];
+		}
+		int Getcntchild()
+		{
+			return cntchild;
+		}
+		double GetES()
+		{
+			return ES;
+		}
+		void DeleteMCNode(vector <MCNode*> &node)
+		{
+			if (node.empty())return;
+
+			for (int i = 0; i < cntchild; i++)
+				delete node[i];
+			cntchild = 0;
+		}
+};
+
+class MCT
+{
+	public:
+
+		MCNode *root;	//루트노드
+		MCNode *nownode;//현재 계산중인 노드
+		MCT()
+		{
+			root = NULL;
+			nownode = NULL;
+		}
+		~MCT()
+		{
+			delete root;
+		}
+		bool isTerminal() // 시뮬레이션에서 승리조건 C6 달성 했는지(적or아군)
+		{
+			return false;
+		}
+		void InitMCT()
+		{
+			root = new MCNode();
+			nownode = root;
+		}
+		void Setnownode(MCNode* &nownode)
+		{
+			this->nownode = nownode;
+		}
+		void MCTSelect(MCNode* &toSelect)//현재 노드의 자식노드중 선택하는 함수
+		{
+			vector <MCNode*> tempchilds;
+			for (int i = 0; toSelect->Getcntchild(); i++)
+			{
+				tempchilds[i] = toSelect->GetChild(i);
+			}
+
+			MCNode* bestchild = new MCNode();
+			double tempmax = 0.0;
+			/////////////TSS 가중치 계산부분 with  UCB
+			
+
+
+			///////////////////////////////
+			
+			for (int i = 0; i < toSelect->Getcntchild(); i++)
+			{
+				if (tempmax < tempchilds[i]->GetES())
+				{
+					tempmax = tempchilds[i]->GetES();
+					bestchild = tempchilds[i];
+				}					
+			}
+			MCTSelect(bestchild);
+		}
+		void MCTExpand(MCNode* &Node)// 탐색중 자식 노드가 없으면 확장
+		{
+			MCNode* childNode1 = new MCNode();
+			MCNode* childNode2 = new MCNode();
+			MCNode* childNode3 = new MCNode();
+			MCNode* childNode4 = new MCNode();
+			MCNode* childNode5 = new MCNode();
+			MCNode* childNode6 = new MCNode();
+			MCNode* childNode7 = new MCNode();
+			MCNode* childNode8 = new MCNode();
+
+		}
+		void MCTSimul()
+		{
+
+		}
+		void MCTBackPro()
+		{
+
+		}
+		inline double MCTUSB(MCNode* cur, MCNode* child, double num);
+
+};
+inline double MCT::MCTUSB(MCNode* cur, MCNode* child, double num)//가중치 계산 알고리즘
+{
+	double factor = 0.0;
+	if (cur == NULL)
+		
+
+	return factor;
+}

@@ -62,6 +62,29 @@ vector < pair<int, int> > player;		//ÅÏ¸¶´Ù ¿òÁ÷ÀÎ µ¹ÀÇ Á¤º¸ ¾Æ±ºÀÌ ÈæÀ¸·Î ½ÃÀÛÇ
 void myturn(int cnt) {
 
 	int x[2], y[2];
+	MCT *Tree = new MCT();				//Æ®¸® »ı¼º
+										//ÃÊ±â 8°³ ³ëµå ÃÊ±âÈ­
+	MCNode* childNode1 = new MCNode();
+	MCNode* childNode2 = new MCNode();
+	MCNode* childNode3 = new MCNode();
+	MCNode* childNode4 = new MCNode();
+	MCNode* childNode5 = new MCNode();
+	MCNode* childNode6 = new MCNode();
+	MCNode* childNode7 = new MCNode();
+	MCNode* childNode8 = new MCNode();
+
+
+	//³» Èæ2¹øÂ°ÅÏ or ¹éÃ¹¹øÂ° ÅÏ¿¡¼­´Â ¹«Á¶°Ç Àû±º ¸¶Áö¸·¼ö ¹éÀ» ¸·¾Æ¾ßÇÔ
+	
+
+
+
+
+	
+
+	
+	
+
 
 	// ÀÌ ºÎºĞ¿¡¼­ ¾Ë°í¸®Áò ÇÁ·Î±×·¥(AI)À» ÀÛ¼ºÇÏ½Ê½Ã¿À. ±âº» Á¦°øµÈ ÄÚµå¸¦ ¼öÁ¤ ¶Ç´Â »èÁ¦ÇÏ°í º»ÀÎÀÌ ÄÚµå¸¦ »ç¿ëÇÏ½Ã¸é µË´Ï´Ù.
 	// ÇöÀç Sample codeÀÇ AI´Â RandomÀ¸·Î µ¹À» ³õ´Â AlgorithmÀÌ ÀÛ¼ºµÇ¾î ÀÖ½À´Ï´Ù.

@@ -97,7 +97,8 @@ void domymove(int x[], int y[], int cnt) {
 	
 }
 
-int showBoard(int x, int y) {	//보드의 값 0? 1? 2?
+int showBoard(int x, int y) 
+{	//보드의 값 0? 1? 2?
 	return board[x][y];
 }
 
@@ -196,7 +197,7 @@ static DWORD WINAPI threadLoop(LPVOID)
 		//턴 계산
 		for (int i = 0; i < 19; i++)
 		{
-			stage += count(board[i], board[i] + 19, 1 || 2);
+			stage += count(board[i], board[i] + 19, 1 || 2); //board[x][y] 중에서 적이나 아군 값을 카운트
 		}
 		stage = stage / 2 + 1;
 
