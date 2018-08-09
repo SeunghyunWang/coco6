@@ -195,11 +195,20 @@ static DWORD WINAPI threadLoop(LPVOID)
 		s_time = GetTickCount();			//내 프로세스가 시작된 시간
 
 		//턴 계산
-		for (int i = 0; i < 19; i++)
+		//for (int i = 0; i < 19; i++)
+		//{
+		//	stage += count(board[i], board[i] + 19, 1 || 2); //board[x][y] 중에서 적이나 아군 값을 카운트
+		//}
+		//stage = stage / 2 + 1;
+		if (player.size() / 2 != 0)
 		{
-			stage += count(board[i], board[i] + 19, 1 || 2); //board[x][y] 중에서 적이나 아군 값을 카운트
+			stage = player.size() / 2;	
 		}
-		stage = stage / 2 + 1;
+		else //stage /2 턴의수
+		{
+			stage = 1;
+		}
+	
 
 		char buf[200] = { " " };
 		sprintf_s(buf, "TURN!!!!!!!!!!!!!: %d \n", stage);
@@ -210,9 +219,24 @@ static DWORD WINAPI threadLoop(LPVOID)
 		else //cnt == 1 흑으로 시작이면 무조건 9,9에 둔다.
 		{
 			int x[2], y[2];
-			x[0] = 9;
-			y[0] = 9;
-			domymove(x,y,1);
+			if (isFree(9, 9))
+			{
+				x[0] = 9;
+				y[0] = 9;
+				domymove(x, y, 1);
+			}
+			else if (isFree(8,8))
+			{
+				x[0] = 8;
+				y[0] = 8;
+				domymove(x, y, 1);
+			}
+			else
+			{
+				x[0] = 10;
+				y[0] = 10;
+				domymove(x, y, 1);
+			}
 		}
 		//myturn(cnt);
 								
@@ -274,10 +298,19 @@ void mymove(int x[], int y[], int cnt) {	//내가 돌을 놨을 때 = 1 board 정보갱신
 		if (isFree(x[i], y[i])) 
 		{
 			board[x[i]][y[i]] = 1;
-			if (i == 0)	Lastmymove1 = make_pair(x[0], y[0]);	//아군 가장 최근 수
-			if (i == 1)	Lastmymove2 = make_pair(x[1], y[1]);
+			if (i == 0)
+			{
+				Lastmymove1 = make_pair(x[0], y[0]);	//아군 가장 최근 수
+				player.push_back(make_pair(Lastmymove1.first, Lastmymove1.second));
+			}	
+			if (i == 1)
+			{
+				Lastmymove2 = make_pair(x[1], y[1]);
+				player.push_back(make_pair(Lastmymove2.first, Lastmymove2.second));
+			}
 		}
-		else {
+		else 
+		{
 			setLine("ERROR 이미 돌이 있는 위치입니다. MY[%d, %d]", x[i], y[i]);
 		}
 	}
@@ -288,10 +321,19 @@ void opmove(int x[], int y[], int cnt) {	//적이 돌을 놨을 때 = 2
 		if (isFree(x[i], y[i])) 
 		{
 			board[x[i]][y[i]] = 2;
-			if (i==0)	Lastopmove1 = make_pair(x[0], y[0]);	//적의 가장 최근 수
-			if (i==1)	Lastopmove2 = make_pair(x[1], y[1]);
+			if (i == 0)
+			{
+				Lastopmove1 = make_pair(x[0], y[0]);	//적 가장 최근 수
+				player.push_back(make_pair(Lastopmove1.first, Lastopmove1.second));
+			}
+			if (i == 1)
+			{
+				Lastopmove2 = make_pair(x[1], y[1]);
+				player.push_back(make_pair(Lastopmove2.first, Lastopmove2.second));
+			}
 		}
-		else {
+		else 
+		{
 			setLine("ERROR 이미 돌이 있는 위치입니다. OP[%d, %d]", x[i], y[i]);
 		}
 	}

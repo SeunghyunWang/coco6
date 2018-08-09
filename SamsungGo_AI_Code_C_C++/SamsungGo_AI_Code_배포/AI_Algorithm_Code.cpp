@@ -64,27 +64,28 @@ void myturn(int cnt) {
 	int x[2], y[2];
 	MCT *Tree = new MCT();				//트리 생성
 										//초기 8개 노드 초기화
-	MCNode* childNode1 = new MCNode();
-	MCNode* childNode2 = new MCNode();
-	MCNode* childNode3 = new MCNode();
-	MCNode* childNode4 = new MCNode();
-	MCNode* childNode5 = new MCNode();
-	MCNode* childNode6 = new MCNode();
-	MCNode* childNode7 = new MCNode();
-	MCNode* childNode8 = new MCNode();
+	
+	MCNode* childNode1 = new MCNode(Tree->root);
+	MCNode* childNode2 = new MCNode(Tree->root);
+	MCNode* childNode3 = new MCNode(Tree->root);
+	MCNode* childNode4 = new MCNode(Tree->root);
+	MCNode* childNode5 = new MCNode(Tree->root);
+	MCNode* childNode6 = new MCNode(Tree->root);
+	MCNode* childNode7 = new MCNode(Tree->root);
+	MCNode* childNode8 = new MCNode(Tree->root);
 
+	Tree->root->AddChild(childNode1);
+	Tree->root->AddChild(childNode2);
+	Tree->root->AddChild(childNode3);
+	Tree->root->AddChild(childNode4);
+	Tree->root->AddChild(childNode5);
+	Tree->root->AddChild(childNode6);
+	Tree->root->AddChild(childNode7);
+	Tree->root->AddChild(childNode8);
+
+	Tree->MCTSelect(Tree->Getroot());
 
 	//내 흑2번째턴 or 백첫번째 턴에서는 무조건 적군 마지막수 백을 막아야함
-	
-
-
-
-
-	
-
-	
-	
-
 
 	// 이 부분에서 알고리즘 프로그램(AI)을 작성하십시오. 기본 제공된 코드를 수정 또는 삭제하고 본인이 코드를 사용하시면 됩니다.
 	// 현재 Sample code의 AI는 Random으로 돌을 놓는 Algorithm이 작성되어 있습니다.

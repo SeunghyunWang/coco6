@@ -67,15 +67,28 @@ class MCNode
 	public:		
 		MCNode()				//생성자
 		{
-
+			MCNode *root = new MCNode();
+			ES = 0.0;
+			depth = 0;
+			cntchild = 0;			
+			Inittreeboard();
+			parent = NULL;
 		}
 		MCNode(int depth)		
 		{
 			ES = 0.0;
 			this->depth = depth;
 			cntchild = 0;
-			memset(treeboard, 0, sizeof(treeboard));
+			Inittreeboard();
 			parent = NULL;			
+		}
+		MCNode(MCNode* parent)
+		{
+			ES = 0.0;
+			this->depth = parent->depth + 1;
+			cntchild = 0;
+			Inittreeboard();
+			this->parent = parent;
 		}
 		~MCNode()			//소멸자
 		{
@@ -89,7 +102,19 @@ class MCNode
 		void AddChild(MCNode* &child)
 		{
 			this->child.push_back(child);
+			//child->parent = s
 			++cntchild;
+		}
+		bool Anychild(MCNode* &node)
+		{
+			for (int i = 0; i < node->Getcntchild(); i++)
+			{
+				if (node->GetChild(i)!=NULL)
+				{
+					return true;
+				}
+			}
+			return false;			
 		}
 		vector <MCNode*> &GetChilds()
 		{
@@ -97,8 +122,8 @@ class MCNode
 		}
 		MCNode* GetChild(int i)
 		{
-				if (child[i] != NULL)
-					return child[i];
+			if (child[i] != NULL)
+				return child[i];
 		}
 		int Getcntchild()
 		{
@@ -107,6 +132,20 @@ class MCNode
 		double GetES()
 		{
 			return ES;
+		}
+		double Getdepth()
+		{
+			return depth;
+		}
+		void Inittreeboard()
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				for (int j = 0; j < 20; j++)
+				{
+					treeboard[i][j] = showBoard(i, j);
+				}
+			}
 		}
 		void DeleteMCNode(vector <MCNode*> &node)
 		{
@@ -128,6 +167,7 @@ class MCT
 		{
 			root = NULL;
 			nownode = NULL;
+			InitMCT();
 		}
 		~MCT()
 		{
@@ -141,48 +181,85 @@ class MCT
 		{
 			root = new MCNode();
 			nownode = root;
+			MCTSelect(root);	//생성과 동시에 MCTS 시작
+		}
+		MCNode* &Getroot()
+		{
+			return root;
 		}
 		void Setnownode(MCNode* &nownode)
 		{
 			this->nownode = nownode;
 		}
+
 		void MCTSelect(MCNode* &toSelect)//현재 노드의 자식노드중 선택하는 함수
 		{
-			vector <MCNode*> tempchilds;
-			for (int i = 0; toSelect->Getcntchild(); i++)
+			if (0) //터미널인지 아닌지 구분하는 함수 필요 => TSS함수필요
 			{
-				tempchilds[i] = toSelect->GetChild(i);
+
+
+
 			}
 
-			MCNode* bestchild = new MCNode();
-			double tempmax = 0.0;
-			/////////////TSS 가중치 계산부분 with  UCB
-			
 
-
-			///////////////////////////////
-			
-			for (int i = 0; i < toSelect->Getcntchild(); i++)
+			else if (toSelect->Anychild(toSelect))
 			{
-				if (tempmax < tempchilds[i]->GetES())
+				vector <MCNode*> tempchilds;
+				for (int i = 0; toSelect->Getcntchild(); i++)
 				{
-					tempmax = tempchilds[i]->GetES();
-					bestchild = tempchilds[i];
-				}					
+					tempchilds[i] = toSelect->GetChild(i);
+				}
+
+				MCNode* bestchild = new MCNode();
+				double tempmax = 0.0;
+				/////////////TSS 가중치 계산부분 with  UCB
+
+
+
+				///////////////////////////////
+
+				for (int i = 0; i < toSelect->Getcntchild(); i++)
+				{
+					if (tempmax < tempchilds[i]->GetES())
+					{
+						tempmax = tempchilds[i]->GetES();
+						bestchild = tempchilds[i];
+					}
+				}
+				MCTSelect(bestchild);
 			}
-			MCTSelect(bestchild);
+			else
+			{
+				if (toSelect->Getdepth()<40)
+					MCTExpand(toSelect);
+			}
+			
 		}
+
 		void MCTExpand(MCNode* &Node)// 탐색중 자식 노드가 없으면 확장
 		{
-			MCNode* childNode1 = new MCNode();
-			MCNode* childNode2 = new MCNode();
-			MCNode* childNode3 = new MCNode();
-			MCNode* childNode4 = new MCNode();
-			MCNode* childNode5 = new MCNode();
-			MCNode* childNode6 = new MCNode();
-			MCNode* childNode7 = new MCNode();
-			MCNode* childNode8 = new MCNode();
+			/* 적의 최근 수 8방향에(isFree 만족하는 것만 할당) 돌을 놓는 함수 필요
 
+			*/
+			MCNode* childNode1 = new MCNode(Node);
+			MCNode* childNode2 = new MCNode(Node);
+			MCNode* childNode3 = new MCNode(Node);
+			MCNode* childNode4 = new MCNode(Node);
+			MCNode* childNode5 = new MCNode(Node);
+			MCNode* childNode6 = new MCNode(Node);
+			MCNode* childNode7 = new MCNode(Node);
+			MCNode* childNode8 = new MCNode(Node);
+
+			Node->AddChild(childNode1);
+			Node->AddChild(childNode2);
+			Node->AddChild(childNode3);
+			Node->AddChild(childNode4);
+			Node->AddChild(childNode5);
+			Node->AddChild(childNode6);
+			Node->AddChild(childNode7);
+			Node->AddChild(childNode8);
+
+			MCTSelect(Node);
 		}
 		void MCTSimul()
 		{
