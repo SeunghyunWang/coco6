@@ -224,18 +224,21 @@ static DWORD WINAPI threadLoop(LPVOID)
 				x[0] = 9;
 				y[0] = 9;
 				domymove(x, y, 1);
+				continue;
 			}
 			else if (isFree(8,8))
 			{
 				x[0] = 8;
 				y[0] = 8;
 				domymove(x, y, 1);
+				continue;
 			}
 			else
 			{
 				x[0] = 10;
 				y[0] = 10;
 				domymove(x, y, 1);
+				continue;
 			}
 		}
 		//myturn(cnt);

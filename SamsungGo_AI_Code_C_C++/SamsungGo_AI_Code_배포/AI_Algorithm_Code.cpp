@@ -83,7 +83,7 @@ void myturn(int cnt) {
 	Tree->root->AddChild(childNode7);
 	Tree->root->AddChild(childNode8);
 
-	Tree->MCTSelect(Tree->Getroot());
+	//Tree->MCTSelect(Tree->Getroot());
 
 	//내 흑2번째턴 or 백첫번째 턴에서는 무조건 적군 마지막수 백을 막아야함
 

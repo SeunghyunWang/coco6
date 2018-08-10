@@ -120,16 +120,20 @@ class MCNode
 		{
 			return child;
 		}
-		MCNode* GetChild(int i)
+		MCNode* &GetChild(int i)
 		{
 			if (child[i] != NULL)
 				return child[i];
+		}
+		MCNode* &GetParent()
+		{
+			return parent;
 		}
 		int Getcntchild()
 		{
 			return cntchild;
 		}
-		double GetES()
+		double &GetES()
 		{
 			return ES;
 		}
@@ -196,7 +200,7 @@ class MCT
 		{
 			if (0) //터미널인지 아닌지 구분하는 함수 필요 => TSS함수필요
 			{
-
+				MCTBackPro(toSelect);
 
 
 			}
@@ -261,22 +265,41 @@ class MCT
 
 			MCTSelect(Node);
 		}
-		void MCTSimul()
+		void MCTSimul(MCNode* &Node)
 		{
+			//가중치로 시뮬레이션 필요
 
+			MCTBackPro(Node);
 		}
-		void MCTBackPro()
+		void MCTBackPro(MCNode* &Node)
 		{
-
+			MCNode* tempNode = new MCNode();
+			tempNode = Node->GetParent();
+			while (Node->GetParent()!=NULL)
+			{
+				tempNode->GetES() += Node->GetES(); //가중치값 위로 갈수록 합산
+				MCTBackPro(Node->GetParent());	// 부모노드로 계속 이동
+			}
 		}
-		inline double MCTUSB(MCNode* cur, MCNode* child, double num);
+		inline double MCTUSB(MCNode* Node, double TS);
 
 };
-inline double MCT::MCTUSB(MCNode* cur, MCNode* child, double num)//가중치 계산 알고리즘
+inline double MCT::MCTUSB(MCNode* Node, double TS)//가중치 계산 알고리즘
 {
 	double factor = 0.0;
-	if (cur == NULL)
-		
+	if (Node == NULL)
+	{
+		factor = 0.0;
+	}
+	else
+	{
+		int totalchilddepth=0;
+		for (int i = 0; i < Node->Getcntchild(); i++)
+		{
+			totalchilddepth += Node->GetChild(i)->Getdepth();
+		}
 
+		factor = TS + sqrt(2.0 * log((double)Node->Getdepth() / (double)totalchilddepth));		
+	}
 	return factor;
 }
