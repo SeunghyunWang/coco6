@@ -2,8 +2,9 @@
 
 // <--------------- 이 Code를 수정하면  작동하지 않을 수 있습니다 ------------------>
 
-
+#pragma once
 #include <iostream>
+#include <deque>
 #include <utility>
 #include <vector>
 using namespace std;
@@ -43,7 +44,8 @@ extern pair <int, int> Lastmymove2;			//최근 아군 두번째 수
 extern pair <int, int> Lastopmove1;			//최근 적군 첫번째 수
 extern pair <int, int> Lastopmove2;			//최근 적군 두번째 수
 extern vector < pair<int, int> > player;		//턴마다 움직인 돌의 정보 아군이 흑으로 시작했으면 인덱스:0과 짝수 / 백이면 홀수
-
+extern vector < pair<int, int> > simulplayer;
+extern double TSS(int x, int y);
 /*
 	커스텀 함수
 */
@@ -54,6 +56,9 @@ extern vector < pair<int, int> > player;		//턴마다 움직인 돌의 정보 아군이 흑으�
 //void MCTExpand();
 //void MCTSimul();
 //void MCTBackPro();
+
+
+
 class MCNode
 {
 	private:
@@ -68,7 +73,12 @@ class MCNode
 		MCNode()				//생성자
 		{
 			MCNode *root = new MCNode();
-			ES = 0.0;
+
+			for (int i = player.size() - 1; i > 0; i--)
+			{
+				ES += TSS( player[i].first, player[i].second );	//@@@@@@@노드 생성시 현재 board 상황에 대한 ES값 저장 
+			}
+
 			depth = 0;
 			cntchild = 0;			
 			Inittreeboard();
@@ -84,7 +94,21 @@ class MCNode
 		}
 		MCNode(MCNode* parent)
 		{
-			ES = 0.0;
+			for (int i = player.size() - 1; i > 0; i--)
+			{
+				ES += TSS(player[i].first, player[i].second);	//@@@@@@@노드 생성시 현재 board 상황에 대한 ES값 저장 
+			}
+			this->depth = parent->depth + 1;
+			cntchild = 0;
+			Inittreeboard();
+			this->parent = parent;
+		}
+		MCNode(MCNode* parent , int dirx, int diry)
+		{
+			for (int i = player.size() - 1; i > 0; i--)
+			{
+				ES += TSS(player[i].first + dirx, player[i].second +diry );	//@@@@@@@노드 생성시 현재 board 상황에 대한 ES값 저장 
+			}
 			this->depth = parent->depth + 1;
 			cntchild = 0;
 			Inittreeboard();
@@ -198,15 +222,13 @@ class MCT
 
 		void MCTSelect(MCNode* &toSelect)//현재 노드의 자식노드중 선택하는 함수
 		{
-			if (0) //터미널인지 아닌지 구분하는 함수 필요 => TSS함수필요
+			int selectdir = 0;
+			double temp;
+			if (temp=(toSelect->GetES()) >5000.0 ) //터미널인지 아닌지 구분하는 함수@@@@@@@@@@@@@@@
 			{
 				MCTBackPro(toSelect);
-
-
 			}
-
-
-			else if (toSelect->Anychild(toSelect))
+			else if (toSelect->Anychild(toSelect)) //자식이 있을때
 			{
 				vector <MCNode*> tempchilds;
 				for (int i = 0; toSelect->Getcntchild(); i++)
@@ -215,21 +237,31 @@ class MCT
 				}
 
 				MCNode* bestchild = new MCNode();
-				double tempmax = 0.0;
+				double tempmax1 = 0.0;
+				double tempmax2 = 0.0;
+				
+				for (int i = 0; toSelect->Getcntchild(); i++)
+				{
+					tempchilds[i] = toSelect->GetChild(i);
+				}
+
 				/////////////TSS 가중치 계산부분 with  UCB
-
-
-
-				///////////////////////////////
-
 				for (int i = 0; i < toSelect->Getcntchild(); i++)
 				{
-					if (tempmax < tempchilds[i]->GetES())
+					tempmax2 = MCTUSB(tempchilds[i], tempchilds[i]->GetES());
+
+					if (tempmax1 <= tempmax2)
 					{
-						tempmax = tempchilds[i]->GetES();
+						tempmax1 = tempmax2;
 						bestchild = tempchilds[i];
+						selectdir = i;
+					}
+					else
+					{
 					}
 				}
+				///////////////////////////////
+				
 				MCTSelect(bestchild);
 			}
 			else
@@ -245,14 +277,14 @@ class MCT
 			/* 적의 최근 수 8방향에(isFree 만족하는 것만 할당) 돌을 놓는 함수 필요
 
 			*/
-			MCNode* childNode1 = new MCNode(Node);
-			MCNode* childNode2 = new MCNode(Node);
-			MCNode* childNode3 = new MCNode(Node);
-			MCNode* childNode4 = new MCNode(Node);
-			MCNode* childNode5 = new MCNode(Node);
-			MCNode* childNode6 = new MCNode(Node);
-			MCNode* childNode7 = new MCNode(Node);
-			MCNode* childNode8 = new MCNode(Node);
+			MCNode* childNode1 = new MCNode(Node, 1, 0);//x+1
+			MCNode* childNode2 = new MCNode(Node, 0, 1);//y+1
+			MCNode* childNode3 = new MCNode(Node, 1, 1);//y+1
+			MCNode* childNode4 = new MCNode(Node, -1, 0);//x-1
+			MCNode* childNode5 = new MCNode(Node, 0, -1);//y-1
+			MCNode* childNode6 = new MCNode(Node, -1, -1);//x-1 y-1
+			MCNode* childNode7 = new MCNode(Node, 1, -1); //x + 1 y - 1
+			MCNode* childNode8 = new MCNode(Node, -1, 1);//x -1 1 y + 1
 
 			Node->AddChild(childNode1);
 			Node->AddChild(childNode2);
